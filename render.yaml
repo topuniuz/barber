@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: barber-api
+    runtime: node
+    plan: free
+    rootDir: services/api
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+
+  - type: worker
+    name: barber-notification-worker
+    runtime: node
+    plan: free
+    rootDir: services/worker
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+
+  - type: cron
+    name: barber-notification-scheduler
+    runtime: node
+    plan: free
+    schedule: "*/5 * * * *"
+    rootDir: services/scheduler
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
